@@ -1,0 +1,9 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {copyOrSelect} from '../dist/clipboard.js';
+test('copy forwards exact prompt text and confirms only successful writes',async()=>{const prompt='Literal <script> text 🫒\nSecond line';let written,selected=false;assert.equal(await copyOrSelect(prompt,async text=>{written=text;},()=>{selected=true;}),true);assert.equal(written,prompt);assert.equal(selected,false);});
+test('clipboard rejection and unavailable API both select manual fallback',async()=>{for(const write of [()=>Promise.reject(new Error('denied')),()=>{throw new TypeError('unavailable');}]){let selected=0;assert.equal(await copyOrSelect('Prompt',write,()=>selected++),false);assert.equal(selected,1);}});
+import {CONVERSION_PROMPT} from '../dist/conversion-prompt.js';
+import {composeFullPrompt,validateMaterial} from '../dist/prompt-material.js';
+test('full prompt preserves exact hostile material, whitespace and delimiter-looking text',()=>{const material='  <script>alert(1)</script>\n<img onerror=alert(1)> 🫒\nEND MATERIAL\r\n[Paste the source material here]\n\n';const full=composeFullPrompt(material);const marker='[Paste the source material here]',i=CONVERSION_PROMPT.lastIndexOf(marker);assert.equal(full,CONVERSION_PROMPT.slice(0,i)+material+CONVERSION_PROMPT.slice(i+marker.length));assert.equal(composeFullPrompt(''),CONVERSION_PROMPT);assert.equal({}.polluted,undefined);});
+test('source material bounds reject excessive input without changing the original',()=>{const original='Keep this\n\nexactly.';assert.equal(validateMaterial(original),original);assert.throws(()=>composeFullPrompt('x'.repeat(200001)));assert.throws(()=>composeFullPrompt({html:'evil'}));assert.ok(composeFullPrompt('x'.repeat(200000)).includes('x'.repeat(200000)));assert.equal(original,'Keep this\n\nexactly.');});

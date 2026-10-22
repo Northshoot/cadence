@@ -1,0 +1,213 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "subtitle": {
+      "type": "string",
+      "minLength": 0,
+      "maxLength": 300
+    },
+    "status": {
+      "type": "string",
+      "minLength": 0,
+      "maxLength": 300
+    },
+    "defaultWpm": {
+      "type": "number",
+      "minimum": 60,
+      "maximum": 240
+    },
+    "targetSeconds": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 28800
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "issue": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2048
+        },
+        "url": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2048
+        },
+        "updatedAt": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 2048
+        }
+      },
+      "required": []
+    },
+    "notes": {
+      "type": "array",
+      "maxItems": 50,
+      "items": {
+        "type": "string",
+        "minLength": 0,
+        "maxLength": 2000
+      }
+    },
+    "sections": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 100,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "cues": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 2000,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 120
+                },
+                "type": {
+                  "enum": [
+                    "speak",
+                    "pause",
+                    "stage",
+                    "breath"
+                  ]
+                },
+                "text": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 12000
+                },
+                "duration": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 3600
+                },
+                "label": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 1000
+                },
+                "editorNote": {
+                  "type": "string",
+                  "minLength": 0,
+                  "maxLength": 1000
+                },
+                "breathHint": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "mode": {
+                      "enum": [
+                        "easy",
+                        "three-five"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "mode"
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "type"
+              ],
+              "allOf": [
+                {
+                  "if": {
+                    "properties": {
+                      "type": {
+                        "const": "pause"
+                      }
+                    }
+                  },
+                  "then": {
+                    "required": [
+                      "duration"
+                    ],
+                    "not": {
+                      "required": [
+                        "text"
+                      ]
+                    }
+                  },
+                  "else": {
+                    "required": [
+                      "text"
+                    ]
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "type": {
+                        "const": "speak"
+                      }
+                    }
+                  },
+                  "then": {
+                    "properties": {
+                      "duration": {
+                        "type": "number",
+                        "minimum": 0.01,
+                        "maximum": 3600
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "cues"
+        ]
+      }
+    }
+  },
+  "required": [
+    "version",
+    "id",
+    "title",
+    "sections"
+  ],
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://northshoot.github.io/cadence/script.schema.json",
+  "title": "Teleprompt Your Way script",
+  "description": "Runtime also requires globally unique IDs, at least one speak word, no reserved object keys, at most 2,000 total cues, 200,000 cue-text characters, 20,000 whitespace-delimited spoken words, nesting depth <=12, UTF-8 file <=1 MB, and total duration <=8 hours at 60 WPM. All strings are inert plain text. Source URLs are never linked or fetched."
+}

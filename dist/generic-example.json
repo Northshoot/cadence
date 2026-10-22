@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "id": "product-update-001",
+  "title": "A short product update",
+  "subtitle": "An example for any spoken presentation",
+  "sections": [
+    {
+      "id": "opening",
+      "title": "Welcome",
+      "cues": [
+        {"id": "opening-direction", "type": "stage", "text": "Look into the lens. Smile.", "duration": 3},
+        {"id": "opening-words", "type": "speak", "text": "Hello everyone. Here is a quick look at what we have been working on."},
+        {"id": "opening-pause", "type": "pause", "duration": 2}
+      ]
+    },
+    {
+      "id": "demo",
+      "title": "The demo",
+      "cues": [
+        {"id": "demo-direction", "type": "stage", "text": "Show the prototype.", "duration": 4},
+        {"id": "demo-words", "type": "speak", "text": "The new experience brings the most useful information into one clear view."},
+        {"id": "demo-close", "type": "speak", "text": "Thank you for watching. We would love to hear what you think."}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "name": "teleprompt-your-way",
+  "version": "1.0.0",
+  "description": "A free, open-source teleprompter. A gift to humanity from TrainYourWay AI.",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "author": "TrainYourWay AI",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Northshoot/cadence.git"
+  },
+  "homepage": "https://northshoot.github.io/cadence/",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "python3 -m http.server 4390 --bind 127.0.0.1 --directory dist",
+    "test": "node --test tests/*.test.mjs"
+  }
+}
