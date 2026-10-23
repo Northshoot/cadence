@@ -8,7 +8,8 @@ A free, open-source teleprompter for talks, lessons, stories, meditations, and a
 
 ## Your words, your rhythm
 
-- Empty by default: paste a script or import plain text / JSON.
+- A playful pirate demo welcomes fresh users with word highlighting, timed pauses, and optional stage directions. Saved scripts and drafts are preserved.
+- Choose **New script** to paste a script or import plain text / JSON. The demo remains available in the script picker; editing it saves a separate personal copy.
 - Word-by-word highlighting at 60–240 WPM, with pause/resume and timing continuity when pace changes.
 - Countdown, text size, section navigation, progress, focus/full-screen, and mirror mode.
 - Explicit timed pauses and optional silent breathing cues; generic scripts need no breathing instructions.

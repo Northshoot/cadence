@@ -106,12 +106,13 @@ export function locate(timeline,position){if(!timeline.items.length)return -1;co
 export function wordAt(item,position){if(!item||item.type!=='speak'||!item.wordTokens.length)return -1;return Math.min(item.wordTokens.length-1,Math.max(0,Math.floor((position-item.start)/item.duration*item.wordTokens.length+1e-9)));}
 export function retime(before,after,position){if(position===0)return 0;if(position>=before.total)return after.total;const old=before.items[locate(before,position)],next=after.items.find(c=>c.id===old?.id);return next?next.start+Math.max(0,Math.min(1,(position-old.start)/(old.duration||1)))*next.duration:0;}
 export function restoreState(raw){
- const input=safeJSON(raw,{maxBytes:LIMITS.storageBytes});shape(input,['version','settings','custom','scriptId','position'],'Saved state');
+ const input=safeJSON(raw,{maxBytes:LIMITS.storageBytes});shape(input,['version','settings','custom','scriptId','position','demoSelected'],'Saved state');
  if(![1,2].includes(input.version)||!Array.isArray(input.custom)||input.custom.length>LIMITS.scripts)fail('Saved state has an unsupported format.');
+ if(input.demoSelected!==undefined&&typeof input.demoSelected!=='boolean')fail('Saved demo selection must be a boolean.');
  const scripts=[],ids=new Set();let rejected=0;
  for(const value of input.custom){try{const s=validateScript(value);if(ids.has(s.id))fail('Duplicate saved script.');scripts.push(s);ids.add(s.id);}catch{rejected++;}}
  const settings=settingsFrom(input.settings),position=typeof input.position==='number'&&Number.isFinite(input.position)?Math.max(0,Math.min(LIMITS.totalSeconds,input.position)):0;
- return {custom:scripts,settings,position,scriptId:typeof input.scriptId==='string'?input.scriptId:null,rejected};
+ return {custom:scripts,settings,position,scriptId:typeof input.scriptId==='string'?input.scriptId:null,demoSelected:input.demoSelected===true,rejected};
 }
 export function restoreDraft(raw){const d=safeJSON(raw);shape(d,['title','text','mode'],'Draft');return {title:string(d.title,'Draft title',200,false),text:string(d.text,'Draft text',LIMITS.jsonBytes,false),mode:['plain','json'].includes(d.mode)?d.mode:fail('Draft mode is invalid.')};}
 export function importedFile(name,size,content){

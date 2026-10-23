@@ -4,7 +4,7 @@ import fs from 'node:fs';
 const root=new URL('../',import.meta.url);
 const read=path=>fs.readFileSync(new URL(path,root),'utf8');
 test('public distribution has only intentional static assets and relative app paths',()=>{
- const expected=['.nojekyll','app.js','clipboard.js','conversion-prompt.js','conversion-prompt.txt','core.js','generic-example.json','index.html','mark.svg','prompt-material.js','script.schema.json','style.css'];
+ const expected=['.nojekyll','app.js','clipboard.js','conversion-prompt.js','conversion-prompt.txt','core.js','demo.js','generic-example.json','index.html','mark.svg','prompt-material.js','script.schema.json','style.css'];
  assert.deepEqual(fs.readdirSync(new URL('dist/',root)).sort(),expected.sort());
  const html=read('dist/index.html');
  for(const match of html.matchAll(/(?:src|href)="([^"]+)"/g)){const value=match[1];if(value.startsWith('https:')||value.startsWith('#'))continue;assert.ok(!value.startsWith('/'),`Root-relative path: ${value}`);assert.ok(fs.existsSync(new URL('dist/'+value,root)),`Missing asset: ${value}`);}
