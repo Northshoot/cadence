@@ -7,6 +7,12 @@ const value=(selector,property)=>rule(selector).split(';').find(x=>x.startsWith(
 const luminance=hex=>hex.slice(1).match(/../g).map(x=>parseInt(x,16)/255).map(x=>x<=.04045?x/12.92:((x+.055)/1.055)**2.4).reduce((n,x,i)=>n+x*[.2126,.7152,.0722][i],0);
 const ratio=(a,b)=>(Math.max(luminance(a),luminance(b))+.05)/(Math.min(luminance(a),luminance(b))+.05);
 
+test('active chapter number keeps a contrast margin above normal-text AA',()=>{
+ const foreground=value('.section-button.active .section-number','color');
+ const background=value('.section-button.active','background');
+ assert.ok(ratio(foreground,background)>=5,`Active chapter number contrast: ${ratio(foreground,background).toFixed(2)}:1`);
+});
+
 test('light-panel text palette meets WCAG AA normal-text contrast, including chapter states',()=>{
  const paper=value(':root','--paper'),active=value('.section-button.active','background');
  for(const selector of ['.side-heading,.outline-title','.outline-title span','.section-number','.section-info strong','.section-info small','.sidebar-note p','.sidebar-note .text-button','.outline-empty']){
